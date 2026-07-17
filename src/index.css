@@ -1,0 +1,106 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Inter", sans-serif;
+  --font-mono: "Share Tech Mono", monospace;
+  --font-display: "Orbitron", sans-serif;
+  
+  --color-arcade-pink: #ff007f;
+  --color-arcade-cyan: #00f0ff;
+  --color-arcade-yellow: #fffb00;
+  --color-arcade-green: #39ff14;
+  --color-arcade-dark: #0d0415;
+  --color-arcade-cabinet: #150a26;
+}
+
+/* Custom retro utility styles for glowing text, scanlines, CRT screen flicker */
+.neon-glow-pink {
+  text-shadow: 0 0 5px #fff, 0 0 10px #ff007f, 0 0 20px #ff007f, 0 0 40px #ff007f;
+}
+
+.neon-glow-cyan {
+  text-shadow: 0 0 5px #fff, 0 0 10px #00f0ff, 0 0 20px #00f0ff, 0 0 40px #00f0ff;
+}
+
+.neon-glow-green {
+  text-shadow: 0 0 5px #fff, 0 0 10px #39ff14, 0 0 20px #39ff14;
+}
+
+.neon-border-pink {
+  border: 2px solid #ff007f;
+  box-shadow: 0 0 10px #ff007f, inset 0 0 10px #ff007f;
+}
+
+.neon-border-cyan {
+  border: 2px solid #00f0ff;
+  box-shadow: 0 0 10px #00f0ff, inset 0 0 10px #00f0ff;
+}
+
+/* Animations */
+@keyframes crt-scan {
+  0% { background-position: 0 0; }
+  100% { background-position: 0 100%; }
+}
+
+@keyframes title-pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.95; transform: scale(1.02); }
+}
+
+@keyframes grid-scrolling {
+  0% { background-position: 0 0; }
+  100% { background-position: 0 40px; }
+}
+
+@keyframes flicker {
+  0%, 19%, 21%, 23%, 25%, 54%, 56%, 100% {
+    opacity: 1;
+  }
+  20%, 24%, 55% {
+    opacity: 0.4;
+  }
+}
+
+.animate-scanline {
+  background: linear-gradient(
+    0deg,
+    rgba(0, 0, 0, 0) 0%,
+    rgba(255, 0, 127, 0.05) 10%,
+    rgba(0, 0, 0, 0) 20%
+  );
+  background-size: 100% 120px;
+  animation: crt-scan 12s linear infinite;
+}
+
+.animate-flicker {
+  animation: flicker 3s infinite alternate;
+}
+
+.animate-grid {
+  animation: grid-scrolling 2s linear infinite;
+}
+
+/* CRT Screen grid overlay */
+.crt-overlay::after {
+  content: " ";
+  display: block;
+  position: absolute;
+  top: 0; left: 0; bottom: 0; right: 0;
+  background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.2) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.04), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.04));
+  z-index: 10;
+  background-size: 100% 3px, 3px 100%;
+  pointer-events: none;
+}
+
+/* custom scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: rgba(13, 4, 21, 0.5);
+}
+::-webkit-scrollbar-thumb {
+  background: #ff007f;
+  border-radius: 3px;
+}
+

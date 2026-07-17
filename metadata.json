@@ -1,0 +1,6 @@
+{
+  "name": "Type or Die",
+  "description": "A retro, arcade-themed typing speedrun game.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
