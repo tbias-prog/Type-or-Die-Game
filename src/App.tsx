@@ -27,9 +27,14 @@ const originalFetch = typeof window !== 'undefined' ? window.fetch.bind(window) 
 const appFetch = async (input: RequestInfo | URL, init?: RequestInit): Promise<Response> => {
   if (originalFetch) {
     const fetchInit = { ...init };
-    // Ensure session cookies are sent to the API
-    if (typeof input === 'string' && input.startsWith('/api/')) {
+    const apiRequest =
+      (typeof input === 'string' && input.startsWith('/api/')) ||
+      (input instanceof Request && input.url.includes('/api/'));
+
+    // Ensure session cookies are sent to the API and keep same-origin semantics
+    if (apiRequest) {
       fetchInit.credentials = 'include';
+      fetchInit.mode = 'same-origin';
     }
     return originalFetch(input, fetchInit);
   }
@@ -58,6 +63,7 @@ export default function App() {
   const [authUsername, setAuthUsername] = useState<string>('');
   const [authPassword, setAuthPassword] = useState<string>('');
   const [authError, setAuthError] = useState<string>('');
+  const [authChecking, setAuthChecking] = useState<boolean>(true);
   const [matchHistory, setMatchHistory] = useState<MatchHistoryEntry[]>([]);
   const [matchHistoryLoading, setMatchHistoryLoading] = useState<boolean>(false);
   const [matchHistorySource, setMatchHistorySource] = useState<GamePanel>('start');
@@ -98,21 +104,30 @@ export default function App() {
   const lastFrameTimeRef = useRef<number>(0);
 
   // Fetch index prototype code on load
+  const checkAuthStatus = async () => {
+    setAuthChecking(true);
+    try {
+      const res = await appFetch('/api/check-auth/');
+      const data = await res.json();
+      if (data.authenticated) {
+        setCurrentUser(data.username);
+      } else {
+        setCurrentUser(null);
+      }
+    } catch (err) {
+      setCurrentUser(null);
+    } finally {
+      setAuthChecking(false);
+    }
+  };
+
   useEffect(() => {
     appFetch('/prototype.html')
       .then(res => res.text())
       .then(text => setPrototypeSource(text))
       .catch(err => console.error("Could not load prototype source file", err));
 
-    // Check auth status
-    appFetch('/api/check-auth/', { credentials: 'omit' }) // Use default proxy behavior
-      .then(res => res.json())
-      .then(data => {
-        if (data.authenticated) {
-          setCurrentUser(data.username);
-        }
-      })
-      .catch(() => {});
+    checkAuthStatus();
   }, []);
 
   // Update sound state from reactive settings
@@ -181,8 +196,11 @@ export default function App() {
         setAuthError(data.error || 'Authentication failed');
         return;
       }
-      
-      setCurrentUser(data.username);
+
+      await checkAuthStatus();
+      if (!currentUser && data.username) {
+        setCurrentUser(data.username);
+      }
       setAuthUsername('');
       setAuthPassword('');
       setPanel('start');

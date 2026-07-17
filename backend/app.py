@@ -9,11 +9,24 @@ app = Flask(__name__)
 app.config['SECRET_KEY'] = 'super-secret-type-or-die-key'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///db.sqlite3'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.config['SESSION_COOKIE_SAMESITE'] = 'Lax'
+app.config['SESSION_COOKIE_HTTPONLY'] = True
+app.config['SESSION_COOKIE_SECURE'] = False
+app.config['SESSION_COOKIE_DOMAIN'] = 'localhost'
+app.config['REMEMBER_COOKIE_SAMESITE'] = 'Lax'
+app.config['REMEMBER_COOKIE_HTTPONLY'] = True
+app.config['REMEMBER_COOKIE_SECURE'] = False
+app.config['REMEMBER_COOKIE_DOMAIN'] = 'localhost'
 
 db.init_app(app)
 
 login_manager = LoginManager()
 login_manager.init_app(app)
+login_manager.login_view = None
+
+@login_manager.unauthorized_handler
+def unauthorized():
+    return jsonify({"authenticated": False, "error": "login_required"}), 401
 
 DEFAULT_SCORES = [
     {"player_name": "WPM_WIZARD", "score": 1450},
@@ -165,6 +178,22 @@ def check_auth():
     if current_user.is_authenticated:
         return jsonify({"authenticated": True, "username": current_user.username})
     return jsonify({"authenticated": False})
+
+@app.route('/api/user/', methods=['GET'])
+def get_user():
+    if current_user.is_authenticated:
+        return jsonify({
+            "authenticated": True,
+            "username": current_user.username,
+            "id": current_user.id,
+            "history_url": "/api/history/",
+            "leaderboard_url": "/api/leaderboard/"
+        })
+    return jsonify({"authenticated": False})
+
+@app.route('/')
+def index():
+    return 'Flask backend is running'
 
 if __name__ == '__main__':
     with app.app_context():
