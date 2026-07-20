@@ -1,20 +1,92 @@
 <div align="center">
-<img width="1200" height="475" alt="GHBanner" src="https://ai.google.dev/static/site-assets/images/share-ais-513315318.png" />
+  <h1 style="font-family: 'Segoe UI', Roboto, sans-serif; letter-spacing: 2px;">⚡️ <strong>TYPE • OR • DIE</strong> ⚡️</h1>
+  <p style="opacity:0.85; margin-top:-12px">A pulse‑pounding, neon‑soaked typing survival challenge</p>
 </div>
 
-# Run and deploy your AI Studio app
+---
 
-This contains everything you need to run your app locally.
+**Badges:** [Build Status](#) • [License: MIT](#) • [Python](#) • [Node](#)
 
-View your app in AI Studio: https://ai.studio/apps/38c448ff-7307-4c88-b9f5-2750fa4afb34
+---
 
-## Run Locally
+**Quick Demo:** Open the prototype at [public/prototype.html](public/prototype.html)
 
-**Prerequisites:**  Node.js
+## Overview
 
+Type • Or • Die is a fast-paced typing game that turns keystrokes into survival. Words spawn, the clock bites, and only sharp fingers keep you alive. The project includes a Vite + React frontend and a small Flask backend for score handling and persistence.
 
-1. Install dependencies:
-   `npm install`
-2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
-3. Run the app:
-   `npm run dev`
+## Features
+
+- Neon, high-contrast UI with audio cues and reactive word difficulty
+- Local score persistence via the Flask backend
+- Configurable wordlists and audio assets in `src/utils` and `assets`
+- Lightweight, single-file backend for easy deployment
+
+## Try It (Local)
+
+Prerequisites: Node 18+ and Python 3.10+
+
+Frontend:
+
+```bash
+npm install
+npm run dev
+```
+
+Backend (Windows PowerShell):
+
+```powershell
+python -m venv venv
+.
+venv\Scripts\Activate.ps1
+pip install -r backend/requirements.txt
+python backend/app.py
+```
+
+Open `http://localhost:5173` (Vite) and the backend on the configured port.
+
+## Gameplay
+
+- Objective: Type the words that appear before the timer runs out.
+- Each correct word adds time and raises your score.
+- Missed or slow words reduce your life — reach zero and it’s game over.
+- Difficulty scales with score; words get longer and spawn faster.
+
+## Controls
+
+- Type letters normally to complete words.
+- `Enter` to submit current input (optional, instantaneous on match).
+- `Esc` to pause / open settings.
+
+## Customize
+
+- Edit word lists: [src/utils/words.ts](src/utils/words.ts)
+- Modify audio: `assets/sfx/` and `src/utils/audio.ts`
+- UI tweaks: [src/App.tsx](src/App.tsx) and [index.css](index.css)
+
+## Development Notes
+
+- Tests: run the backend API tests with `pytest backend/test_api.py`
+- Lint & format: use your preferred tools (Prettier / ESLint / Black)
+
+## Files of Interest
+
+- Frontend: [src/](src/) — React + Vite app
+- Backend: [backend/app.py](backend/app.py) — Flask score API
+- Word source: [src/utils/words.ts](src/utils/words.ts)
+
+## Contributing
+
+Contributions are welcome. Open an issue or submit a PR with changes. For UI/UX suggestions, include screenshots or a short GIF.
+
+## Credits
+
+Made with ⚡️ vibes by the Type • Or • Die team. Inspired by arcade typing challenges and neon cyber aesthetics.
+
+## License
+
+This project is licensed under the MIT License — see `LICENSE` for details.
+
+---
+
+If you want a different vibe (retro arcade, horror, or minimalist), tell me which and I’ll tailor the README visuals and copy.
