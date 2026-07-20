@@ -83,10 +83,5 @@ Contributions are welcome. Open an issue or submit a PR with changes. For UI/UX 
 
 Made with ⚡️ vibes by the Type • Or • Die team. Inspired by arcade typing challenges and neon cyber aesthetics.
 
-## License
 
-This project is licensed under the MIT License — see `LICENSE` for details.
 
----
-
-If you want a different vibe (retro arcade, horror, or minimalist), tell me which and I’ll tailor the README visuals and copy.
